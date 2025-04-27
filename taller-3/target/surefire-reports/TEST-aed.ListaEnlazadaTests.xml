@@ -12,7 +12,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="DE"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-amd64/lib"/>
-    <property name="sun.java.command" value="/home/rl250348/Dokumente/uni/aed-fcen/taller-3/target/surefire/surefirebooter-20250427175541698_3.jar /home/rl250348/Dokumente/uni/aed-fcen/taller-3/target/surefire 2025-04-27T17-55-41_642-jvmRun1 surefire-20250427175541698_1tmp surefire_0-20250427175541698_2tmp"/>
+    <property name="sun.java.command" value="/home/rl250348/Dokumente/uni/aed-fcen/taller-3/target/surefire/surefirebooter-20250427180035518_3.jar /home/rl250348/Dokumente/uni/aed-fcen/taller-3/target/surefire 2025-04-27T18-00-35_457-jvmRun1 surefire-20250427180035518_1tmp surefire_0-20250427180035518_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/home/rl250348/Dokumente/uni/aed-fcen/taller-3/target/test-classes:/home/rl250348/Dokumente/uni/aed-fcen/taller-3/target/classes:/home/rl250348/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.9.2/junit-jupiter-engine-5.9.2.jar:/home/rl250348/.m2/repository/org/junit/platform/junit-platform-engine/1.9.2/junit-platform-engine-1.9.2.jar:/home/rl250348/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/rl250348/.m2/repository/org/junit/platform/junit-platform-commons/1.9.2/junit-platform-commons-1.9.2.jar:/home/rl250348/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.2/junit-jupiter-api-5.9.2.jar:/home/rl250348/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -27,7 +27,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="surefire.real.class.path" value="/home/rl250348/Dokumente/uni/aed-fcen/taller-3/target/surefire/surefirebooter-20250427175541698_3.jar"/>
+    <property name="surefire.real.class.path" value="/home/rl250348/Dokumente/uni/aed-fcen/taller-3/target/surefire/surefirebooter-20250427180035518_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.14+7-Ubuntu-122.04.1"/>
     <property name="user.name" value="rl250348"/>
@@ -54,11 +54,11 @@
   </properties>
   <testcase name="imprimirLista" classname="aed.ListaEnlazadaTests" time="0.046"/>
   <testcase name="nuevaListaEstaVacia" classname="aed.ListaEnlazadaTests" time="0.001"/>
-  <testcase name="iteradorRecorreListaHaciaAdelante" classname="aed.ListaEnlazadaTests" time="0.003"/>
+  <testcase name="iteradorRecorreListaHaciaAdelante" classname="aed.ListaEnlazadaTests" time="0.002"/>
   <testcase name="agregarVariosElementosSoloAtras" classname="aed.ListaEnlazadaTests" time="0.001"/>
   <testcase name="eliminarElementos" classname="aed.ListaEnlazadaTests" time="0.001"/>
   <testcase name="copiarListaConstructor" classname="aed.ListaEnlazadaTests" time="0.001"/>
-  <testcase name="imprimirLuegoDeEliminar" classname="aed.ListaEnlazadaTests" time="0.001"/>
+  <testcase name="imprimirLuegoDeEliminar" classname="aed.ListaEnlazadaTests" time="0"/>
   <testcase name="agregarUnElementoAdelante" classname="aed.ListaEnlazadaTests" time="0.001"/>
   <testcase name="agregarVariosElementosAdelanteYAtras" classname="aed.ListaEnlazadaTests" time="0.001"/>
   <testcase name="iteradorListaVacia" classname="aed.ListaEnlazadaTests" time="0.001"/>
