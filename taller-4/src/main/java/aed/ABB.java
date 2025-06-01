@@ -37,8 +37,9 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         while (nodoActual != null) {
             if (nodoActual.izquierda != null) {
                 nodoActual = nodoActual.izquierda;
+            } else {
+                break;
             }
-            break;
         }
 
         return nodoActual.value;
@@ -119,8 +120,64 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     }
 
     public void eliminar(T elem){
-        // Si lo removemos, cardinal --;
-        throw new UnsupportedOperationException("No implementada aun");
+        Nodo raizTmp = raiz;
+        Nodo padre = null;
+        boolean found = false;
+        while(raiz != null && raiz.value != null) {
+            int comparisson = raiz.value.compareTo(elem);
+            if (comparisson == 0) {
+                Nodo toRemove = raiz;
+                raiz = raizTmp;
+                cardinal--;
+                removerNodo(toRemove, padre);
+                return;
+            }
+
+            // Raiz es menor, voy a la derecha
+            padre = raiz;
+            if (comparisson < 0) {
+                raiz = raiz.derecha;
+            } else {
+                raiz = raiz.izquierda;
+            }
+        }
+
+        raiz = raizTmp;
+    }
+
+    private void removerNodo(Nodo nodo, Nodo padre) {
+        // Caso 1: Ningun hijo
+        final boolean isLeftNode = padre.izquierda != null && padre.izquierda.value.compareTo(nodo.value) == 0;
+        if (nodo.izquierda == null && nodo.derecha == null) {
+            // Busco que nodo del padre tiene ese valor
+            if (isLeftNode) {
+                padre.izquierda = null;
+            } else {
+                padre.derecha = null;
+            }
+        
+            return;
+        }
+    
+        // Caso 2.1: El de la derecha es null pero la izq no.
+        if (nodo.izquierda != null && nodo.derecha == null) {
+            if (isLeftNode) {
+                padre.izquierda = nodo.izquierda;
+            } else {
+                padre.derecha = nodo.izquierda;
+            }
+            return;
+        }
+
+        // Caso 2.2: El de la izq es null pero el de la derecha no.
+        if (nodo.izquierda == null && nodo.derecha != null) {
+            if (isLeftNode) {
+                padre.izquierda = nodo.derecha;
+            } else {
+                padre.derecha = nodo.derecha;
+            }
+            return;
+        }
     }
 
     public String toString(){
