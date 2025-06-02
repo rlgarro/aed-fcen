@@ -20,8 +20,16 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         }
     }
 
+    private class PadreHijoNodo {
+        private Nodo padre, hijo;
+        private PadreHijoNodo(Nodo padre, Nodo hijo) {
+            this.padre = padre;
+            this.hijo = hijo;
+        }
+    }
+
     public ABB() {
-        this.raiz = new Nodo(null);
+        this.raiz = null;
     }
 
     public int cardinal() {
@@ -29,20 +37,31 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     }
 
     public T minimo(){
+        PadreHijoNodo min = minimo(this.raiz);
+        if (min == null) {
+            return null;
+        }
+    
+        return min.hijo.value;
+    }
+
+    public PadreHijoNodo minimo(Nodo raiz){
         if (raiz == null) {
             return null;
         }
 
         Nodo nodoActual = raiz;
+        Nodo padre = null;
         while (nodoActual != null) {
             if (nodoActual.izquierda != null) {
+                padre = nodoActual;
                 nodoActual = nodoActual.izquierda;
             } else {
                 break;
             }
         }
 
-        return nodoActual.value;
+        return new PadreHijoNodo(padre, nodoActual);
     }
 
     public T maximo(){
@@ -54,16 +73,18 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         while (nodoActual != null) {
             if (nodoActual.derecha != null) {
                 nodoActual = nodoActual.derecha;
+            } else {
+                break;
             }
-            break;
         }
 
         return nodoActual.value;
     }
 
     public void insertar(T elem){
-        if (raiz.value == null) {
-            raiz.value = elem;
+        if (raiz == null) {
+            raiz = new Nodo(elem);
+            //raiz.value = elem;
             cardinal++;
             return;
         } else if (pertenece(elem)) {
@@ -97,40 +118,15 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         cardinal++;
     }
 
-    public boolean pertenece(T elem) {
-        Nodo raizTmp = raiz;
-        boolean found = false;
-        while(raiz != null && raiz.value != null) {
-            int comparisson = raiz.value.compareTo(elem);
-            if (comparisson == 0) {
-                found = true;
-                break;
-            }
-
-            // Raiz es menor, voy a la derecha
-            if (comparisson < 0) {
-                raiz = raiz.derecha;
-            } else {
-                raiz = raiz.izquierda;
-            }
-        }
-
-        raiz = raizTmp;
-        return found;
-    }
-
-    public void eliminar(T elem){
+    public PadreHijoNodo encontrar(T elem) {
         Nodo raizTmp = raiz;
         Nodo padre = null;
         boolean found = false;
         while(raiz != null && raiz.value != null) {
             int comparisson = raiz.value.compareTo(elem);
             if (comparisson == 0) {
-                Nodo toRemove = raiz;
-                raiz = raizTmp;
-                cardinal--;
-                removerNodo(toRemove, padre);
-                return;
+                found = true;
+                break;
             }
 
             // Raiz es menor, voy a la derecha
@@ -142,42 +138,76 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
             }
         }
 
+        Nodo target = raiz;
         raiz = raizTmp;
+        return new PadreHijoNodo(padre, target);
+    }
+
+    public boolean pertenece(T elem) {
+        Nodo res = encontrar(elem).hijo;
+        return res != null;
+    }
+
+    public void eliminar(T elem){
+        PadreHijoNodo padreHijoNodo = encontrar(elem);
+        if (padreHijoNodo == null) {
+            return;
+        }
+
+        cardinal--;
+        removerNodo(padreHijoNodo.hijo, padreHijoNodo.padre);
     }
 
     private void removerNodo(Nodo nodo, Nodo padre) {
         // Caso 1: Ningun hijo
-        final boolean isLeftNode = padre.izquierda != null && padre.izquierda.value.compareTo(nodo.value) == 0;
         if (nodo.izquierda == null && nodo.derecha == null) {
-            // Busco que nodo del padre tiene ese valor
-            if (isLeftNode) {
+            // Si es la raiz entonces seteo raiz a null
+            if (nodo.value.compareTo(raiz.value) == 0) {
+                raiz = null;
+                return;
+            }
+
+            // Sino al padre le remuevo la coneccion a este nodo.
+            if (padre.izquierda != null && padre.izquierda.value.compareTo(nodo.value) == 0) {
                 padre.izquierda = null;
             } else {
                 padre.derecha = null;
             }
-        
+
             return;
         }
     
         // Caso 2.1: El de la derecha es null pero la izq no.
         if (nodo.izquierda != null && nodo.derecha == null) {
-            if (isLeftNode) {
-                padre.izquierda = nodo.izquierda;
-            } else {
-                padre.derecha = nodo.izquierda;
-            }
+            // Como el padre sigue apuntando a "nodo" reemplazo los valores.
+            nodo.value = nodo.izquierda.value;
+            nodo.derecha = nodo.izquierda.derecha;
+            nodo.izquierda = nodo.izquierda.izquierda;
             return;
         }
 
         // Caso 2.2: El de la izq es null pero el de la derecha no.
         if (nodo.izquierda == null && nodo.derecha != null) {
-            if (isLeftNode) {
-                padre.izquierda = nodo.derecha;
-            } else {
-                padre.derecha = nodo.derecha;
-            }
+            nodo.value = nodo.derecha.value;
+            nodo.izquierda = nodo.derecha.izquierda;
+            nodo.derecha = nodo.derecha.derecha;
             return;
         }
+
+        // Caso 3: Tiene dos nodos hijos.
+        Nodo sucessorSearch = nodo.derecha;
+        PadreHijoNodo sucessorPair = minimo(sucessorSearch);
+        if (sucessorPair.padre == null) {
+            // No iteramos mas de una vez dentro de minimo.
+            sucessorPair.padre = nodo;
+        }
+        T val = sucessorPair.hijo.value;
+        removerNodo(sucessorPair.hijo, sucessorPair.padre);
+        nodo.value = val;
+    }
+
+    private Nodo sucesor() {
+        return minimo(raiz).hijo;
     }
 
     public String toString(){
@@ -188,11 +218,18 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         private Nodo _actual;
 
         public boolean haySiguiente() {            
-            throw new UnsupportedOperationException("No implementada aun");
+            return sucesor() != null;
         }
     
         public T siguiente() {
-            throw new UnsupportedOperationException("No implementada aun");
+            Nodo sucesor = sucesor();
+            _actual = sucesor;
+            return sucesor.value;
+        }
+
+
+        public ABB_Iterador() {
+            this._actual = raiz;
         }
     }
 
