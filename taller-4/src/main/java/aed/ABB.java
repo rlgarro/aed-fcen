@@ -113,7 +113,6 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
             }
         }
 
-        //raiz = new Nodo(elem);
         raiz = raizTmp;
         cardinal++;
     }
@@ -129,7 +128,6 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
                 break;
             }
 
-            // Raiz es menor, voy a la derecha
             padre = raiz;
             if (comparisson < 0) {
                 raiz = raiz.derecha;
@@ -210,26 +208,84 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         return minimo(raiz).hijo;
     }
 
+    private Nodo sucesor(Nodo nodo) {
+        // Busco el sucesor, es decir el valor siguiente mas grande.
+        // Para eso hago:
+        // 1. Si tiene subarbol derecho entonces claramente lo voy a encontrar buscando al minimo alli.
+        // 2. Si no tiene subarbol derecho entonces lo voy a encontrar en su padre.
+        // En este caso el padre tiene que estar conectado hacia la izquierda con el nodo elegido.
+        if (nodo.derecha != null) {
+            return minimo(nodo.derecha).hijo;
+        }
+
+        // Busco el ancestro primero a la derecha, o sea el nodo que tenga de hijo (a la izquierda) al nodo actual.
+        // El mismo puede no existir (estamos en el ultimo nodo "abajo" de todo)
+        Nodo tmpRaiz = raiz;
+        Nodo padre = null;
+
+        while(raiz != null) {
+            if (raiz.value.compareTo(nodo.value) == 0) {
+                break;
+            }
+
+            if (padre != null && padre.izquierda.value.compareTo(nodo.value) == 0) {
+                break; 
+            }
+
+            if (raiz.value.compareTo(nodo.value) < 0) {
+                raiz = raiz.derecha;
+            } else {
+                padre = raiz;
+                raiz = raiz.izquierda;
+            }
+
+        }
+
+        raiz = tmpRaiz;
+
+        return padre;
+    }
+
     public String toString(){
-        throw new UnsupportedOperationException("No implementada aun");
+        if (raiz == null) {
+            return "{}";
+        }
+
+        Nodo minimo = minimo(raiz).hijo;
+        String s = "{";
+        while(minimo != null) {
+            s += minimo.value.toString() + ",";
+            minimo = sucesor(minimo);
+        }
+        s = s.substring(0, s.length() - 1) + "}";
+
+        return s;
     }
 
     private class ABB_Iterador implements Iterador<T> {
         private Nodo _actual;
 
         public boolean haySiguiente() {            
-            return sucesor() != null;
+            if (_actual == null) {
+                return raiz != null;
+            }
+
+            return sucesor(_actual) != null;
         }
     
         public T siguiente() {
-            Nodo sucesor = sucesor();
-            _actual = sucesor;
-            return sucesor.value;
+            if (_actual == null) {
+                _actual = minimo(raiz).hijo;
+                return _actual.value;
+            }
+
+            _actual = sucesor(_actual);
+            return _actual.value;
         }
 
 
         public ABB_Iterador() {
-            this._actual = raiz;
+            this._actual = null;
         }
     }
 
